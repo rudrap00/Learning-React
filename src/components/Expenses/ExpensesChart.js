@@ -20,8 +20,8 @@ function ExpensesChart(props) {
 
     for(const expense of props.expenses){
         const month = expense.date.getMonth();
-        chartDataPoints[month].value = expense.amount;
-        max = Math.max(max, expense.amount);
+        chartDataPoints[month].value += expense.amount;
+        max = Math.max(max, chartDataPoints[month].value);
     }
 
     for(let i = 0; i < 12; i++){

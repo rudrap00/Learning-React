@@ -1,46 +1,29 @@
-import React, { useState } from "react";
-import './ExpenseForm.css'
+import React, { useRef } from "react";
+import "./ExpenseForm.css";
 import uuid4 from "uuid4";
 
 function ExpenseForm(props) {
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [date, setDate] = useState("");
-
-
-  const titleHandler = (event) => {
-    setTitle(event.target.value);
-  };
-
-  const amountHandler = (event) => {
-    setAmount(event.target.value);
-  };
-
-  const dateHandler = (event) => {
-    setDate(event.target.value);
-
-    // setInput({
-    //     ...input,
-    //     date: event.target.value
-    // })
-    // setInput((state) => {
-    //     return{ ...state, date: event.target.value }
-    // })
-  };
+  const titleRef = useRef("");
+  const amountRef = useRef(0);
+  const dateRef = useRef("");
 
   const submitHandler = (e) => {
     e.preventDefault();
 
+    const title = titleRef.current.value;
+    const amount = amountRef.current.value;
+    const date = dateRef.current.value;
+
     const expenseData = {
       id: uuid4(),
       title: title,
-      amount: +amount,
+      amount: Number(amount),
       date: new Date(date),
     };
 
-    setTitle("");
-    setAmount("");
-    setDate("");
+    titleRef.current.value = "";
+    amountRef.current.value = 0;
+    dateRef.current.value = "";
 
     props.onSaveExpenseData(expenseData);
   };
@@ -50,26 +33,21 @@ function ExpenseForm(props) {
       <div className="new-expense__controls">
         <div className="new-expense__control">
           <label>Title</label>
-          <input type="text" onChange={titleHandler} value={title} required />
+          <input type="text" ref={titleRef} required />
         </div>
         <div className="new-expense__control">
           <label>Amount</label>
-          <input
-            type="number"
-            min="1"
-            step="1"
-            onChange={amountHandler}
-            value={amount}
-            required
-          />
+          <input type="number" min="1" step="1" ref={amountRef} required />
         </div>
         <div className="new-expense__control">
           <label>Date</label>
-          <input type="date" onChange={dateHandler} value={date} required />
+          <input type="date" ref={dateRef} required />
         </div>
       </div>
       <div className="new-expense__actions">
-        <button onClick={props.onCancelForm} type="button" >Cancel</button>
+        <button onClick={props.onCancelForm} type="button">
+          Cancel
+        </button>
         <button type="submit">Add Expense</button>
       </div>
     </form>
